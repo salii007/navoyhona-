@@ -6,6 +6,8 @@ DROP TABLE IF EXISTS products CASCADE;
 DROP TABLE IF EXISTS stores CASCADE;
 DROP TABLE IF EXISTS bakeries CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS scheduled_orders CASCADE;
+DROP TABLE IF EXISTS locations CASCADE;
 
 
 CREATE TABLE users (
@@ -14,6 +16,7 @@ CREATE TABLE users (
   phone VARCHAR(15) UNIQUE,
   password VARCHAR(100),
   role VARCHAR(20)
+  location_id INTEGER REFERENCES locations(id) 
 );
 
 CREATE TABLE products (
@@ -67,6 +70,27 @@ CREATE TABLE baking_log (
   date DATE,
   driver_id INTEGER REFERENCES users(id)
 );
+
+CREATE TABLE locations (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  address TEXT NOT NULL
+);
+
+
+CREATE TABLE scheduled_orders (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,              -- Zakaz bergan odamning ismi
+  phone VARCHAR(20) NOT NULL,              -- Telefon raqami
+  address TEXT NOT NULL,                   -- Manzili
+  date DATE NOT NULL,                      -- Qaysi kunga zakaz
+  time TIME NOT NULL,                      -- Qaysi vaqtda yetkaziladi
+  quantity INTEGER NOT NULL,               -- Nechta non
+  location_id INTEGER NOT NULL,            -- Qaysi Navoyhona (planshet)ga tegishli
+  status VARCHAR(20) DEFAULT 'pending'     -- Zakaz holati: 'pending', 'delivered'
+);
+
+
 
 
 
