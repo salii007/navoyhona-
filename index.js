@@ -19,6 +19,7 @@ const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
 const statsRoutes = require('./routes/stats');
 const adminReportRoutes = require('./routes/adminReports');
+const returnsRoutes = require('./routes/returns');
 
 // 🔗 Marshrutlarni ulash
 app.use('/products', productRoutes);    // CRUD: /products
@@ -28,6 +29,7 @@ app.use('/auth', authRoutes); // /login, /register, /protected, /admin/orders
 app.use('/admin', adminRoutes);
 app.use('/', statsRoutes);
 app.use('/admin/reports', adminReportRoutes);
+app.use('/returns', returnsRoutes);
 
 
 // 🚀 Serverni ishga tushurish
