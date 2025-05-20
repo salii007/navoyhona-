@@ -16,16 +16,18 @@ const role = require('./middleware/roleMiddleware');
 const productRoutes = require('./routes/products');
 const orderRoutes = require('./routes/orders');
 const authRoutes = require('./routes/auth');
+const adminRoutes = require('./routes/admin');
+const statsRoutes = require('./routes/stats');
+const adminReportRoutes = require('./routes/adminReports');
 
 // 🔗 Marshrutlarni ulash
 app.use('/products', productRoutes);    // CRUD: /products
 app.use('/orders', orderRoutes);        // CRUD: /orders
 app.use('/scheduled-orders', scheduledOrderRoutes);
 app.use('/auth', authRoutes); // /login, /register, /protected, /admin/orders
-app.get('/test', (req, res) => {
-  console.log('✅ /test ishladi!');
-  res.send('OK!');
-});
+app.use('/admin', adminRoutes);
+app.use('/', statsRoutes);
+app.use('/admin/reports', adminReportRoutes);
 
 
 // 🚀 Serverni ishga tushurish

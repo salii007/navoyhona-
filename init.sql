@@ -15,7 +15,7 @@ CREATE TABLE users (
   name VARCHAR(100),
   phone VARCHAR(15) UNIQUE,
   password VARCHAR(100),
-  role VARCHAR(20)
+  role VARCHAR(20),
   location_id INTEGER REFERENCES locations(id) 
 );
 

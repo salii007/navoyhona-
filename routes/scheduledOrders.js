@@ -4,23 +4,70 @@ const db = require('../db');
 const authMiddleware = require('../middleware/auth');
 const auth = require('../middleware/authMiddleware');
 const role = require('../middleware/roleMiddleware');
+const pool = require('../db'); // 👈 BU LINIYANI QO‘SH!
 
+router.patch('/:id/delivered', auth, async (req, res) => {
+  const orderId = req.params.id;
+  const locationId = req.user.location_id;
+
+  try {
+    // Faqat o‘z location_id dagi zakazni yangilash
+    const result = await pool.query(
+      `UPDATE scheduled_orders 
+       SET status = 'delivered' 
+       WHERE id = $1 AND location_id = $2 
+       RETURNING *`,
+      [orderId, locationId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Zakaz topilmadi yoki sizga tegishli emas' });
+    }
+
+    res.json({ message: 'Zakaz delivered holatiga o‘tkazildi', order: result.rows[0] });
+  } catch (err) {
+    console.error('❌ PATCH xatolik:', err);
+    res.status(500).json({ error: 'Server xatoligi' });
+  }
+});
+
+
+router.post('/', auth, async (req, res) => {
+  const locationId = req.user.location_id; // token ichidan olinadi
+  const { name, phone, address, date, time, quantity } = req.body;
+
+  try {
+    const result = await pool.query(
+      `INSERT INTO scheduled_orders 
+       (name, phone, address, date, time, quantity, location_id) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+      [name, phone, address, date, time, quantity, locationId]
+    );
+
+    res.status(201).json({ message: 'Zakaz qo‘shildi', order: result.rows[0] });
+  } catch (err) {
+    console.error('❌ Zakaz qo‘shishda xatolik:', err);
+    res.status(500).json({ error: 'Server xatoligi' });
+  }
+});
 
 // GET /scheduled-orders — location_id bo‘yicha zakazlar
 router.get('/', authMiddleware, async (req, res) => {
   const locationId = req.user.location_id;
+  console.log('📦 Foydalanuvchi location_id:', locationId);
 
   try {
     const result = await pool.query(
-      'SELECT * FROM scheduled_orders WHERE location_id = $1 ORDER BY delivery_date ASC',
+      'SELECT * FROM scheduled_orders WHERE location_id = $1 ORDER BY date, time ASC',
       [locationId]
     );
     res.json(result.rows);
-  } catch (error) {
-    console.error('Scheduled orders error:', error);
+  } catch (err) {
+    console.error('❌ scheduled-orders error:', err); // 👈 Buni ko‘rish muhim
     res.status(500).json({ error: 'Server error' });
   }
 });
+
 
 // 🟢 1. Muddatli zakaz qo‘shish (planshetdan)
 router.post('/', auth, async (req, res) => {
