@@ -1,8 +1,8 @@
-const express = require('express');
+import express from 'express';
+import db from '../db.js';
+import auth from '../middleware/authMiddleware.js';
+import role from '../middleware/roleMiddleware.js';
 const router = express.Router();
-const db = require('../db'); // 📦 PostgreSQL bilan bog‘lovchi modul
-const auth = require('../middleware/authMiddleware'); // 🔐 Token tekshiruvchi middleware
-const role = require('../middleware/roleMiddleware'); // 👤 Ruxsatlarni tekshiruvchi middleware
 
 // ✅ 1. Buyurtma qo‘shish — faqat admin ruxsatiga ega foydalanuvchi qo‘sha oladi
 router.post('/', auth, role('admin'), async (req, res) => {
@@ -61,4 +61,4 @@ router.delete('/:id', auth, role('admin'), async (req, res) => {
 });
 
 
-module.exports = router;
+export default router;

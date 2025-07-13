@@ -1,32 +1,27 @@
-const express = require('express');
+import express from 'express';
+import db from '../db.js';                                 
+import auth from '../middleware/authMiddleware.js';        
+import role from '../middleware/roleMiddleware.js';        
 const router = express.Router();
-const db = require('../db'); // sening db ulovchi fayling
-
-// Middleware: faqat adminlar kira oladi
-const auth = require('../middleware/authMiddleware');
-const role = require('../middleware/roleMiddleware');
 
 router.get('/top-customers', auth, role('admin'), async (req, res) => {
   try {
     const { date } = req.query;
-    const selectedDate = date || new Date().toISOString().slice(0, 10); // 'YYYY-MM-DD'
-
-    const result = await db.query(`
-      SELECT 
-        name AS client_name,
-        phone AS client_phone,
-        SUM(quantity) AS total_quantity,
-        SUM(quantity * unit_price) AS total_sum
-      FROM scheduled_orders
-      WHERE DATE(delivered_at) = $1
-      GROUP BY name, phone
-      ORDER BY total_quantity DESC
-      LIMIT 10
-    `, [selectedDate]);
-
+    const selectedDate = date || new Date().toISOString().slice(0, 10);
+    const result = await db.query(
+      `SELECT name AS client_name, phone AS client_phone,
+              SUM(quantity) AS total_quantity,
+              SUM(quantity * unit_price) AS total_sum
+       FROM scheduled_orders
+       WHERE DATE(delivered_at) = $1
+       GROUP BY name, phone
+       ORDER BY total_quantity DESC
+       LIMIT 10`,
+      [selectedDate]
+    );
     res.json(result.rows);
   } catch (err) {
-    console.error('Top customers error:', err);  // 🔍 Log chiqaramiz
+    console.error('Top customers error:', err);
     res.status(500).json({ error: 'Server error' });
   }
 });
@@ -134,7 +129,9 @@ router.get('/couriers', auth, role('admin'), async (req, res) => {
       res.status(500).json({ error: 'Server error' });
     }
   });
+
+
   
   
 
-module.exports = router;
+export default router;

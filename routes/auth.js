@@ -1,10 +1,10 @@
-const express = require('express');
-const router = express.Router();
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const db = require('../db');
-const auth = require('../middleware/authMiddleware');
-const role = require('../middleware/roleMiddleware');
+ import express from 'express';
+ import bcrypt from 'bcrypt';
+ import jwt from 'jsonwebtoken';
+ import db from '../db.js';
+ import auth from '../middleware/authMiddleware.js';
+ import role from '../middleware/roleMiddleware.js';
+ const router = express.Router();
 
 router.post('/login', async (req, res) => {
   const { phone, password } = req.body;
@@ -110,4 +110,4 @@ router.get('/admin/orders', auth, role('admin'), async (req, res) => {
 
 
 
-module.exports = router;
+export default router;

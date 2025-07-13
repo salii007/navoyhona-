@@ -1,21 +1,34 @@
-const express = require('express');
-const router = express.Router();
-const pool = require('../db');
-const auth = require('../middleware/authMiddleware');
-const role = require('../middleware/roleMiddleware');
+// routes/admin.js
 
-// 🔍 Barcha zakazlar yoki status bo‘yicha
+import express from 'express';
+import pool from '../db.js';
+import auth from '../middleware/authMiddleware.js';
+import role from '../middleware/roleMiddleware.js';
+
+const router = express.Router();
+
+// 🔍 Barcha zakazlar yoki status bo‘yicha filtrlangan zakazlar
+// GET /admin/scheduled-orders?status=pending|delivered
 router.get('/scheduled-orders', auth, role('admin'), async (req, res) => {
-  const status = req.query.status;
+  const { status } = req.query;
 
   try {
-    const query = status
-      ? 'SELECT * FROM scheduled_orders WHERE status = $1 ORDER BY date, time ASC'
-      : 'SELECT * FROM scheduled_orders ORDER BY date, time ASC';
-
-    const result = status
-      ? await pool.query(query, [status])
-      : await pool.query(query);
+    let result;
+    if (status) {
+      result = await pool.query(
+        `SELECT * 
+         FROM scheduled_orders 
+         WHERE status = $1 
+         ORDER BY date, time ASC`,
+        [status]
+      );
+    } else {
+      result = await pool.query(
+        `SELECT * 
+         FROM scheduled_orders 
+         ORDER BY date, time ASC`
+      );
+    }
 
     res.json(result.rows);
   } catch (err) {
@@ -24,13 +37,16 @@ router.get('/scheduled-orders', auth, role('admin'), async (req, res) => {
   }
 });
 
-// ❌ Admin zakazni o‘chiradi
+// ❌ Admin delivered bo‘lgan zakazni o‘chiradi
+// DELETE /admin/scheduled-orders/:id
 router.delete('/scheduled-orders/:id', auth, role('admin'), async (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
 
   try {
     const result = await pool.query(
-      'DELETE FROM scheduled_orders WHERE id = $1 RETURNING *',
+      `DELETE FROM scheduled_orders 
+       WHERE id = $1 
+       RETURNING *`,
       [id]
     );
 
@@ -45,4 +61,4 @@ router.delete('/scheduled-orders/:id', auth, role('admin'), async (req, res) => 
   }
 });
 
-module.exports = router;
+export default router;

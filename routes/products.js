@@ -1,9 +1,8 @@
-const express = require('express');
+import express from 'express';
+import db from '../db.js';
+import auth from '../middleware/authMiddleware.js';
+import role from '../middleware/roleMiddleware.js';
 const router = express.Router();
-const auth = require('../middleware/authMiddleware');
-const role = require('../middleware/roleMiddleware');
-const db = require('../db');
-
 // Qo‘shish (faqat admin)
 router.post('/', auth, role('admin'), async (req, res) => {
   const { name, price, description } = req.body;
@@ -66,4 +65,4 @@ router.delete('/:id', auth, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
