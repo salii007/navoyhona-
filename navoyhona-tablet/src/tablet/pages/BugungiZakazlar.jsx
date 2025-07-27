@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ZakazCard from "../components/ZakazCard";
 
+
+
 const BugungiZakazlar = () => {
   const [orders, setOrders] = useState([]);
 
@@ -23,12 +25,15 @@ const BugungiZakazlar = () => {
   }, []);
 
   return (
-    <div>
-      <h2>📅 Bugungi Zakazlar</h2>
-      {orders.map((zakaz) => (
-        <ZakazCard key={zakaz.id} zakaz={zakaz} />
-      ))}
-    </div>
+    
+     
+      <div>
+        <h2>📅 Bugungi Zakazlar</h2>
+        {orders.map((zakaz) => (
+          <ZakazCard key={zakaz.id} zakaz={zakaz} />
+        ))}
+      </div>
+    
   );
 };
 

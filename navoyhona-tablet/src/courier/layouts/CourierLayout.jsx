@@ -1,28 +1,16 @@
-import { Outlet, Navigate } from 'react-router-dom';
-
-function getUserRole() {
-  const token = localStorage.getItem('token');
-  if (!token) return null;
-
-  try {
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload.role;
-  } catch {
-    return null;
-  }
-}
+import { Routes, Route, Navigate } from 'react-router-dom';
+import ZakazlarCourier from '../pages/ZakazlarCourier';
+// … boshqa importlar
 
 export default function CourierLayout() {
-  const role = getUserRole();
-
-  // Faqat courier role kirishi mumkin
-  if (role !== 'courier') {
-    return <Navigate to="/login" replace />;
-  }
-
   return (
-    <div className="min-h-screen bg-gray-100">
-      <Outlet />
+    <div>
+      {/* Navbar, sidebar va hokazo */}
+      <Routes>
+        <Route path="zakazlar" element={<ZakazlarCourier />} />
+        <Route index element={<Navigate to="zakazlar" />} />
+        {/* kerak bo‘lsa boshqa child-sahifalar */}
+      </Routes>
     </div>
   );
 }

@@ -1,61 +1,80 @@
-// src/pages/Login.jsx
-import React, { useState } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from '../../../axiosConfig.js';
 
-export default function Login() {
-  const [username, setUsername] = useState('');
+function CourierLogin() {
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const handleSubmit = async e => {
+  // 🔁 Token bor bo‘lsa → avtomatik zakazlar sahifasiga o‘tkazamiz
+  useEffect(() => {
+    const token = localStorage.getItem('courierToken');
+    const role = localStorage.getItem('role');
+    if (token && role === 'courier') {
+      navigate('/courier/zakazlar', { replace: true });
+    }
+  }, [navigate]);
+
+  // 🔐 Login funksiyasi
+  const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, {
-        username,
+      const response = await axios.post('/auth/login', {
+        phone,
         password,
       });
-      // token va rolni saqlaymiz
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('role', data.role);  // misol: 'courier' yoki 'tablet'
 
-      // rolga qarab yo‘naltirish
-      if (data.role === 'courier') {
-        navigate('/courier', { replace: true });
-      } else {
-        navigate('/zakazlar', { replace: true });
+      const { token } = response.data;
+
+      // 🎯 JWT token ichidan ma'lumotlarni ajratamiz
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const { role, courier_id, location_id } = payload;
+
+      if (role !== 'courier') {
+        alert("Bu login courier uchun emas!");
+        return;
       }
-    } catch {
-      setError('Login yoki parol noto‘g‘ri');
+
+      // 🗂️ Token va foydalanuvchini localStorage ga yozamiz
+      localStorage.setItem('courierToken', token);
+      localStorage.setItem('role', role);
+      localStorage.setItem('courier_id', courier_id);
+      localStorage.setItem('location_id', location_id);
+
+      navigate('/courier/zakazlar');
+    } catch (err) {
+      console.error('❌ Login xatosi:', err);
+      alert('Login yoki parol noto‘g‘ri!');
     }
   };
 
   return (
-    <div className="p-4 max-w-sm mx-auto mt-20">
-      <h2 className="text-2xl mb-4">Tizimga kirish</h2>
-      {error && <div className="text-red-500 mb-2">{error}</div>}
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="p-4 max-w-sm mx-auto">
+      <h2 className="text-xl mb-4 font-bold">Kuryer Login</h2>
+      <form onSubmit={handleLogin} className="space-y-4">
         <input
-          placeholder="Login"
-          value={username}
-          onChange={e => setUsername(e.target.value)}
-          className="w-full p-2 border rounded"
+          type="text"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          placeholder="Telefon raqami"
+          className="border p-2 w-full rounded"
+          required
         />
         <input
-          placeholder="Parol"
           type="password"
           value={password}
-          onChange={e => setPassword(e.target.value)}
-          className="w-full p-2 border rounded"
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Parol"
+          className="border p-2 w-full rounded"
+          required
         />
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded"
-        >
+        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded w-full">
           Kirish
         </button>
       </form>
     </div>
   );
 }
+
+export default CourierLogin;

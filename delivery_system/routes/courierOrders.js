@@ -101,4 +101,31 @@ router.patch('/:id/payment', auth, role('courier'), async (req, res) => {
   }
 });
 
+// bugunki zakakzlar courier
+router.get('/today', auth, role('courier'), async (req, res) => {
+  const courierId = req.user.id;
+  const locationId = req.user.location_id;
+
+  try {
+    const result = await db.query(`
+      SELECT *
+      FROM scheduled_orders
+      WHERE
+        (
+          courier_id = $1
+          OR (courier_id IS NULL AND location_id = $2)
+        )
+        AND date = (now() AT TIME ZONE 'Asia/Tashkent')::date
+      ORDER BY time ASC
+    `, [courierId, locationId]);
+
+    res.json(result.rows);
+  } catch (err) {
+    console.error('❌ Bugungi zakazlar olishda xatolik:', err);
+    res.status(500).json({ error: 'Server xatoligi' });
+  }
+});
+
+
+
 export default router;

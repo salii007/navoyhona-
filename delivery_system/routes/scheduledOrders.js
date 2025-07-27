@@ -95,6 +95,7 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
+
 // 4️⃣ Yetkazilgan deb belgilash
 router.patch('/:id/delivered', auth, async (req, res) => {
   const { id } = req.params;

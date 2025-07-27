@@ -1,7 +1,9 @@
 import axios from '../../axiosConfig.js';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import Navbar from '../../common/Navbar'; // ✅ Navbar import qilingan
+//token
+// 🔓 JWT token ichidan rolni ajratib olish
 function getRoleFromToken(token) {
   try {
     const payload = JSON.parse(atob(token.split('.')[1]));
@@ -16,15 +18,19 @@ function Login() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  // Agar token mavjud bo‘lsa — avtomatik yo‘naltirish
+  // 🔁 Token mavjud bo‘lsa → avtomatik yo‘naltiramiz
   useEffect(() => {
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
 
-    if (token && role === 'courier') navigate('/courier', { replace: true });
-    else if (token && role === 'tablet') navigate('/', { replace: true });
-  }, []);
+    if (token && role === 'courier') {
+      navigate('/courier/zakazlar', { replace: true });
+    } else if (token && role === 'tablet') {
+      navigate('/zakazlar', { replace: true });
+    }
+  }, [navigate]);
 
+  // 🔐 Login funksiyasi
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -38,13 +44,18 @@ function Login() {
         return;
       }
 
-      // Token va rolni saqlaymiz
+      // 🧠 Token va rolni saqlash
       localStorage.setItem('token', token);
       localStorage.setItem('role', role);
 
-      // Yo‘naltiramiz
-      if (role === 'courier') navigate('/courier', { replace: true });
-      else if (role === 'tablet') navigate('/', { replace: true });
+      // 🚀 Roli bo‘yicha yo‘naltirish
+      if (role === 'courier') {
+        navigate('/courier/zakazlar', { replace: true });
+      } else if (role === 'tablet') {
+        navigate('/zakazlar', { replace: true });
+      } else {
+        alert('❌ Nomaʼlum rol');
+      }
     } catch (error) {
       console.error('Login xatosi:', error);
       alert('❌ Login muvaffaqiyatsiz! Telefon yoki parol noto‘g‘ri.');
@@ -52,44 +63,49 @@ function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
-      <form
-        onSubmit={handleLogin}
-        className="bg-white shadow-lg rounded-xl p-6 w-full max-w-sm space-y-4"
-      >
-        <h2 className="text-xl font-bold text-center text-blue-700">📲 Kirish</h2>
+    <>
+      {/* Navbar login sahifasida ham bo‘lishi mumkin deb so‘rading */}
+      <Navbar />
 
-        <input
-          type="tel"
-          inputMode="numeric"
-          pattern="[0-9]{9,15}"
-          title="Faqat raqam kiriting"
-          autoComplete="tel"
-          placeholder="Telefon raqam"
-          className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          required
-        />
-
-        <input
-          type="password"
-          placeholder="Parol"
-          autoComplete="current-password"
-          className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-
-        <button
-          type="submit"
-          className="bg-blue-600 hover:bg-blue-700 transition text-white font-semibold p-3 rounded w-full"
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
+        <form
+          onSubmit={handleLogin}
+          className="bg-white shadow-lg rounded-xl p-6 w-full max-w-sm space-y-4"
         >
-          🔐 Kirish
-        </button>
-      </form>
-    </div>
+          <h2 className="text-xl font-bold text-center text-blue-700">📲 Kirish</h2>
+
+          <input
+            type="tel"
+            inputMode="numeric"
+            pattern="[0-9]{9,15}"
+            title="Faqat raqam kiriting"
+            autoComplete="tel"
+            placeholder="Telefon raqam"
+            className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            required
+          />
+
+          <input
+            type="password"
+            placeholder="Parol"
+            autoComplete="current-password"
+            className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+
+          <button
+            type="submit"
+            className="bg-blue-600 hover:bg-blue-700 transition text-white font-semibold p-3 rounded w-full"
+          >
+            🔐 Kirish
+          </button>
+        </form>
+      </div>
+    </>
   );
 }
 

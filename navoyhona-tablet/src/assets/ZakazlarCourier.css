@@ -1,0 +1,42 @@
+/* Tugmalar */
+.btn {
+    @apply px-4 py-2 rounded text-white font-medium transition;
+  }
+  
+  .btn-yellow {
+    @apply bg-yellow-500 hover:bg-yellow-600;
+  }
+  
+  .btn-green {
+    @apply bg-green-600 hover:bg-green-700;
+  }
+  
+  .btn-blue {
+    @apply bg-blue-600 hover:bg-blue-700;
+  }
+  
+  .btn-gray {
+    @apply bg-gray-100 hover:bg-gray-300 text-gray-800;
+  }
+  
+  /* Zakaz kartasi */
+  .order-card {
+    @apply bg-white rounded shadow p-4 space-y-2;
+  }
+  
+  /* Filter tugmalari */
+  .filter-btn {
+    @apply px-3 py-1 rounded text-sm transition;
+  }
+  
+  .filter-btn.active {
+    @apply bg-blue-600 text-white;
+  }
+  
+  .filter-btn.inactive {
+    @apply bg-gray-100 hover:bg-gray-200 text-gray-800;
+  }
+  .zakaz-grid {
+    @apply grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3;
+  }
+  

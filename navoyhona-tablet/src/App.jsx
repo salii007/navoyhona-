@@ -28,8 +28,9 @@ export default function App() {
       <Route path="/login" element={<Login />} />
 
       {/* Authenticated foydalanuvchilar */}
-      {role === 'courier' && <Route path="/*" element={<CourierLayout />} />}
-      {role === 'tablet' && <Route path="/*" element={<TabletLayout />} />}
+      <Route path="courier/*" element={<CourierLayout />} />
+      <Route path="/*"        element={<TabletLayout  />} />
+
 
       {/* Token yo‘q yoki noto‘g‘ri bo‘lsa → Login sahifasiga */}
       {!role && <Route path="*" element={<Navigate to="/login" replace />} />}
