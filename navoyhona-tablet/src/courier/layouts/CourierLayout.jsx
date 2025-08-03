@@ -1,16 +1,22 @@
+// src/courier/layouts/CourierLayout.jsx
 import { Routes, Route, Navigate } from 'react-router-dom';
 import ZakazlarCourier from '../pages/ZakazlarCourier';
-// … boshqa importlar
+import CourierOrders from '../pages/CourierOrders';
+import CourierDetails from '../pages/CourierDetails';
+import CourierNavbar from '../components/CourierNavbar';
 
 export default function CourierLayout() {
   return (
     <div>
-      {/* Navbar, sidebar va hokazo */}
-      <Routes>
-        <Route path="zakazlar" element={<ZakazlarCourier />} />
-        <Route index element={<Navigate to="zakazlar" />} />
-        {/* kerak bo‘lsa boshqa child-sahifalar */}
-      </Routes>
+      <CourierNavbar />
+      <div className="p-4">
+        <Routes>
+          <Route path="zakazlar" element={<ZakazlarCourier />} />
+          <Route path="orders" element={<CourierOrders />} />
+          <Route path="order/:id" element={<CourierDetails />} />
+          <Route index element={<Navigate to="zakazlar" replace />} />
+        </Routes>
+      </div>
     </div>
   );
 }

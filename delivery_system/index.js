@@ -18,10 +18,10 @@ import returnsRoutes from './routes/returns.js';
 import adminReturnsRoutes from './routes/adminReturns.js';
 import courierLocationRoutes from './routes/courierLocation.js';
 import courierOrderRoutes from './routes/courierOrders.js';
+import yandexSuggestRouter from './routes/yandexSuggest.js';
 
-// 🔒 Middlewares (agar kerak bo‘lsa)
-// import auth from './middleware/authMiddleware.js';
-// import role from './middleware/roleMiddleware.js';
+
+
 
 const app = express();
 
@@ -33,7 +33,7 @@ app.use(bodyParser.json());
 app.use('/api/proxy-suggest', suggestRouter);
 app.use('/api/scheduled-orders', scheduledOrderRoutes);
 app.use('/products', productRoutes);
-app.use('/orders', orderRoutes);
+app.use('/admin', orderRoutes);
 app.use('/auth', authRoutes);
 app.use('/admin', adminRoutes);
 app.use('/', statsRoutes);
@@ -42,6 +42,9 @@ app.use('/returns', returnsRoutes);
 app.use('/admin/returns', adminReturnsRoutes);
 app.use('/couriers', courierLocationRoutes);
 app.use('/courier/orders', courierOrderRoutes);
+app.use('/yandex-suggest', yandexSuggestRouter);
+
+
 
 // 🚀 Serverni ishga tushurish
 const PORT = process.env.PORT || 3000;

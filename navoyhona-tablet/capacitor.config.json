@@ -1,0 +1,7 @@
+{
+    "appId": "com.navoyhona.app",
+    "appName": "Navoyhona",
+    "webDir": "dist",
+    "bundledWebRuntime": false
+  }
+  

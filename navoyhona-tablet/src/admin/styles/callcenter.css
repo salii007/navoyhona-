@@ -1,0 +1,92 @@
+.call-center-container {
+    display: flex;
+    height: 100%;
+  }
+  
+  .call-center-left {
+    width: 70%;
+    overflow-y: auto;
+    border-right: 1px solid #ddd;
+    padding-right: 1rem;
+  }
+  
+  .call-center-right {
+    width: 30%;
+    padding-left: 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 40%;
+  }
+  
+  .call-screen {
+    font-family: monospace;
+    font-size: 1.2rem;
+    background-color: #f3f4f6;
+    border: 1px solid #ccc;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    text-align: right;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+  
+  .dial-pad {
+    margin-top: 1rem;
+  }
+  
+  .dial-pad-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .dial-button {
+    background-color: #dbeafe;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    transition: background-color 0.2s;
+  }
+  .dial-button:hover {
+    background-color: #bfdbfe;
+  }
+  
+  .call-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+  .call-buttons button {
+    font-size: 0.50rem;
+    padding: 0.52rem;
+    border-radius: 9999px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    color: white;
+  }
+  .call-buttons .call {
+    background-color: #22c55e;
+  }
+  .call-buttons .hangup {
+    background-color: #ef4444;
+  }
+  .call-buttons .backspace {
+    background-color: #facc15;
+    color: white;
+  }
+  
+  .log-entry {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    padding: 4px 0;
+  }
+  
+  .text-muted {
+    color: #aaa;
+    font-style: italic;
+  }
+  

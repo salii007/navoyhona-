@@ -4,8 +4,16 @@ function LogoutButton() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('role'); // Rolni ham tozalaymiz
+    const role = localStorage.getItem('role');
+
+    if (role === 'admin') {
+      localStorage.removeItem('admintoken'); // ✅ admin tokeni
+    } else {
+      localStorage.removeItem('token'); // ✅ tablet yoki courier tokeni
+    }
+
+    localStorage.removeItem('role'); // 🎯 rolni ham tozalaymiz
+
     navigate('/login', { replace: true });
   };
 

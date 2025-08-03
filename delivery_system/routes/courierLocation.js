@@ -32,16 +32,16 @@ router.patch('/position', auth, role('courier'), async (req, res) => {
 // GET /couriers/locations
 router.get('/locations', auth, role('admin'), async (req, res) => {
   try {
-    const result = await pool.query(
-      `SELECT id, name, latitude, longitude, last_seen
-       FROM users
-       WHERE role = 'courier'`
-    );
+    const result = await db.query(`
+      SELECT id, name, latitude, longitude
+      FROM users
+      WHERE role = 'courier' AND latitude IS NOT NULL AND longitude IS NOT NULL
+    `);
     res.json(result.rows);
   } catch (err) {
-    console.error('🌍 Joylashuvlar xatosi:', err);
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: 'Kuryer joylashuvini olishda xatolik' });
   }
 });
+
 
 export default router;

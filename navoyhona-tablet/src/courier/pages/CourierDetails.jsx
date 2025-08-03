@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import ZakazCard from '../../tablet/components/ZakazCard.js';
+import ZakazCard from '../../tablet/components/ZakazCard.jsx';
 import CourierActions from '../components/CourierActions';
 export default function CourierDetails() {
   const { id } = useParams();

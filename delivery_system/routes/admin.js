@@ -37,6 +37,27 @@ router.get('/scheduled-orders', auth, role('admin'), async (req, res) => {
   }
 });
 
+// 📦 Non zaxirasi ro'yxati (har bir Navoyhona bo‘yicha)
+router.get('/stocks', auth, role('admin'), async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT l.id AS location_id, l.name, json_agg(
+        json_build_object('product_name', p.name, 'quantity', s.quantity)
+      ) AS products
+      FROM bread_stock s
+      JOIN locations l ON s.location_id = l.id
+      JOIN products p ON s.product_id = p.id
+      GROUP BY l.id, l.name
+      ORDER BY l.name
+    `);
+
+    res.json(result.rows);
+  } catch (err) {
+    console.error('❌ /admin/stocks error:', err);
+    res.status(500).json({ error: 'Server xatoligi' });
+  }
+});
+
 // ❌ Admin delivered bo‘lgan zakazni o‘chiradi
 // DELETE /admin/scheduled-orders/:id
 router.delete('/scheduled-orders/:id', auth, role('admin'), async (req, res) => {

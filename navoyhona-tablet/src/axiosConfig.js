@@ -1,26 +1,26 @@
-// src/axiosConfig.js
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: '/api', // Vite proxy orqali ishlaydi
+  baseURL: '/api',
 });
 
 instance.interceptors.request.use((config) => {
   const pathname = window.location.pathname;
-  let roleToken = null;
+  let token = null;
 
-  if (pathname.startsWith('/courier')) {
-    roleToken = localStorage.getItem('courierToken');
+  if (pathname.startsWith('/admin')) {
+    token = localStorage.getItem('admintoken');
+  } else if (pathname.startsWith('/courier')) {
+    token = localStorage.getItem('courierToken');
   } else {
-    roleToken = localStorage.getItem('tabletToken');
+    token = localStorage.getItem('tabletToken');
   }
 
-  if (roleToken) {
-    config.headers.Authorization = 'Bearer ' + roleToken;
+  if (token) {
+    config.headers.Authorization = 'Bearer ' + token;
   }
 
   return config;
 }, (error) => Promise.reject(error));
-
 
 export default instance;

@@ -1,14 +1,13 @@
-import React from 'react';
+// src/tablet/components/PrivateRoute.jsx
 import { Navigate, Outlet } from 'react-router-dom';
 
-/**
- * Tablet (admin/planshet) bo‘limi uchun himoya.
- * Agar token bo‘lsa ichki sahifalarni (<Outlet/>) ko‘rsatadi,
- * aks holda login sahifasiga qaytaradi.
- */
 export default function PrivateRoute() {
-  const token = localStorage.getItem('token');
-  return token
-    ? <Outlet />
-    : <Navigate to="/" replace />;
+  const token = localStorage.getItem('tabletToken');
+  const role = localStorage.getItem('role');
+
+  if (!token || role !== 'tablet') {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <Outlet />;
 }

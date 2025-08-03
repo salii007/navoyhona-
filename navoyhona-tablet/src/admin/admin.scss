@@ -1,0 +1,51 @@
+/* src/admin/admin.scss */
+
+/* Asosiy oyna */
+.admin-container {
+  padding: 0.5rem;
+  background: #f9fafb;
+  height: calc(100vh - 50px); /* 👉 Masalan, header 50px bo‘lsa */
+}
+
+
+  /* Panel sarlavhasi */
+  .admin-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  /* Grid tartib */
+  .admin-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 1rem;
+    height: calc(100vh - 5rem);
+  }
+  
+  /* Har bir karta */
+  .admin-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    overflow: auto;
+    transition: transform 0.2s ease;
+  }
+  .admin-card:hover {
+    transform: scale(1.01);
+  }
+  
+  /* Kichik sarlavhalar */
+  .admin-card h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #1f2937;
+  }
+  

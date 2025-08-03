@@ -1,0 +1,53 @@
+/* ZakazModal.css */
+
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+  }
+  
+  .modalContent {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    max-width: 24rem;
+    width: 100%;
+    position: relative;
+    font-family: sans-serif;
+  }
+  
+  .closeButton {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    font-size: 1.2rem;
+    color: #555;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .closeButton:hover {
+    color: black;
+  }
+  
+  .detailList {
+    font-size: 0.875rem;
+    color: #333;
+    margin-top: 0.5rem;
+    line-height: 1.4;
+  }
+  
+  .detailList p {
+    margin-bottom: 0.25rem;
+  }
+  
+  .detailList strong {
+    font-weight: bold;
+  }
+  

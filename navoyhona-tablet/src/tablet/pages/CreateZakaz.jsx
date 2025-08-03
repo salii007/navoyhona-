@@ -52,7 +52,7 @@ export default function CreateZakaz() {
       return;
     }
   
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('tabletToken');
     let location_id;
   
     try {
