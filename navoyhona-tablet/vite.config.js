@@ -5,7 +5,7 @@ import path from 'path';
 
 export default defineConfig({
   
-  base: '/',
+  base: './',
   plugins: [react()],
   resolve: {
     alias: {
@@ -23,6 +23,7 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: path => path.replace(/^\/api/, ''),
       },
+      '/production': { target: 'http://localhost:3000', changeOrigin: true },
     },
   },
 });

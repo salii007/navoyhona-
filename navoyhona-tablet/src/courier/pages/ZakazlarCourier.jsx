@@ -16,7 +16,7 @@ export default function ZakazlarCourier() {
   const fetchOrders = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('/courier/orders/today');
+      const res = await axios.get('courier/orders/today');
       setOrders(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       setError("Server bilan bog‘lanishda xatolik yuz berdi.");

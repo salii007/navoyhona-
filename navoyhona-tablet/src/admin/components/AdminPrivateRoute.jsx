@@ -2,7 +2,7 @@
 import { Navigate } from 'react-router-dom';
 
 export default function AdminPrivateRoute({ children }) {
-  const token = localStorage.getItem('admintoken');
+  const token = localStorage.getItem('adminToken');
   const role = localStorage.getItem('role');
 
   if (!token || role !== 'admin') {

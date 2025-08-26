@@ -37,7 +37,7 @@ export default function CreateZakaz() {
     const mi = String(now.getMinutes()).padStart(2, '0');
     setScheduledTime(`${hh}:${mi}`);
 
-    axios.get('/products')
+    axios.get('products')
       .then(res => setProducts(res.data))
       .catch(err => console.error('❌ Mahsulotlarni olishda xatolik:', err));
   }, []);

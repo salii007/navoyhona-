@@ -24,7 +24,7 @@ export default function OrdersSection() {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('admintoken');
+    const token = localStorage.getItem('adminToken');
     if (!token) {
       navigate('/login');
       return;
@@ -32,7 +32,7 @@ export default function OrdersSection() {
 
     const fetchOrders = async () => {
       try {
-        const res = await axios.get('/admin/orders');
+        const res = await axios.get('admin/orders');
 
         // ✅ path bo‘yicha tanlab ko‘rsatamiz
         const allOrders = res.data;

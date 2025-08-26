@@ -1,41 +1,54 @@
-// src/App.jsx
 import { Routes, Route, Navigate } from 'react-router-dom';
-import CourierLayout from './courier/layouts/CourierLayout.jsx';
-import TabletLayout from './tablet/layouts/TabletLayout.jsx';
-import { adminRoutes } from './admin/routes';
+
+// LOGIN
 import CommonLogin from './common/pages/CommonLogin.jsx';
 import AdminLogin from './admin/pages/Login.jsx';
 
-function getUserRole() {
-  const pathname = window.location.pathname;
-  const tokenKey = pathname.startsWith('/courier') ? 'courierToken' : 'tabletToken';
-  const token = localStorage.getItem(tokenKey);
+// ADMIN
+import ProtectedRouteAdmin from './router/ProtectedRouteAdmin.jsx';
+import AdminLayout from './admin/layout/AdminLayout.jsx';
+import Dashboard from './admin/pages/Dashboard.jsx';
+import ZakazlarAdmin from './admin/pages/ZakazlarAdmin.jsx';
+import Statistika from './admin/pages/StatistikaPage.jsx';
+import Sozlamalar from './admin/pages/SozlamalarPage.jsx';
 
-  try {
-    return token ? JSON.parse(atob(token.split('.')[1])).role : null;
-  } catch {
-    return null;
-  }
-}
+// COURIER
+import ProtectedRouteCourier from './router/ProtectedRouteCourier.jsx';
+import CourierLayout from './courier/layouts/CourierLayout.jsx';
+
+// TABLET
+import ProtectedRouteTablet from './router/ProtectedRouteTablet.jsx';
+import TabletLayout from './tablet/layouts/TabletLayout.jsx';
 
 export default function App() {
-  const role = getUserRole();
-
   return (
     <Routes>
       {/* Login sahifalari */}
       <Route path="/login" element={<CommonLogin />} />
       <Route path="/admin/login" element={<AdminLogin />} />
 
-      {/* Admin yo‘llari – HAR DOIM birinchi bo‘lishi kerak */}
-      {adminRoutes}
+      {/* ADMIN yo‘llari (faqat admin) */}
+      <Route element={<ProtectedRouteAdmin />}>
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="zakazlar" element={<ZakazlarAdmin />} />
+          <Route path="statistika" element={<Statistika />} />
+          <Route path="sozlamalar" element={<Sozlamalar />} />
+        </Route>
+      </Route>
 
-      {/* Boshqa layoutlar */}
-      <Route path="/courier/*" element={<CourierLayout />} />
-      <Route path="/*" element={<TabletLayout />} />
+      {/* COURIER yo‘llari (faqat courier) */}
+      <Route element={<ProtectedRouteCourier />}>
+        <Route path="/courier/*" element={<CourierLayout />} />
+      </Route>
 
-      {/* Token yo‘q bo‘lsa login sahifasiga */}
-      {!role && <Route path="*" element={<Navigate to="/login" replace />} />}
+      {/* TABLET yo‘llari (faqat tablet) */}
+      <Route element={<ProtectedRouteTablet />}>
+        <Route path="/*" element={<TabletLayout />} />
+      </Route>
+
+      {/* Not found → login */}
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 }

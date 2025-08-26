@@ -13,31 +13,38 @@ function getRoleFromToken(token) {
   }
 }
 
+import { useLocation } from 'react-router-dom';
+
 export default function CommonLogin() {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const location = useLocation(); // 👈 joriy path
 
   useEffect(() => {
     const token =
       localStorage.getItem('tabletToken') ||
       localStorage.getItem('courierToken') ||
-      localStorage.getItem('admintoken');
+      localStorage.getItem('adminToken');
     const role = localStorage.getItem('role');
 
-    if (token && role === 'courier') {
-      navigate('/courier/zakazlar', { replace: true });
-    } else if (token && role === 'tablet') {
-      navigate('/zakazlar', { replace: true });
-    } else if (token && role === 'admin') {
-      navigate('/admin/dashboard', { replace: true });
+    // ✅ faqat login sahifasida turganda redirect
+    if (location.pathname === '/login' || location.pathname === '/') {
+      if (token && role === 'courier') {
+        navigate('/courier/zakazlar', { replace: true });
+      } else if (token && role === 'tablet') {
+        navigate('/zakazlar', { replace: true });
+      } else if (token && role === 'admin') {
+        navigate('/admin/dashboard', { replace: true });
+      }
     }
-  }, [navigate]);
+  }, [navigate, location.pathname]);
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/auth/login', { phone, password });
+      const response = await axios.post('auth/login', { phone, password });
       const token = response.data.token;
       const role = getRoleFromToken(token);
 
@@ -50,7 +57,7 @@ export default function CommonLogin() {
         localStorage.setItem('role', 'tablet'); 
         navigate('/zakazlar');
       } else if (role === 'admin') {
-        localStorage.setItem('admintoken', token);
+        localStorage.setItem('adminToken', token);
         localStorage.setItem('role', 'admin');
         navigate('/admin/dashboard');
       } else {

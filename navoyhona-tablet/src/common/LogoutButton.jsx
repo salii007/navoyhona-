@@ -7,7 +7,7 @@ function LogoutButton() {
     const role = localStorage.getItem('role');
 
     if (role === 'admin') {
-      localStorage.removeItem('admintoken'); // ✅ admin tokeni
+      localStorage.removeItem('adminToken'); // ✅ admin tokeni
     } else {
       localStorage.removeItem('token'); // ✅ tablet yoki courier tokeni
     }

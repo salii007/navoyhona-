@@ -1,0 +1,153 @@
+/* ===============================
+   Admin Pages SCSS – universal style
+   File: src/admin/styles/admin-pages.scss
+   =============================== */
+
+/* ==== RANGLAR ==== */
+$bg: #f9fafb; // slate-50
+$card-bg: #ffffff;
+$text: #111827;
+$text-light: #6b7280;
+$border: #e5e7eb;
+$primary: #2563eb; // blue-600
+$danger: #dc2626;
+$shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+
+/* ==== SHAKLLAR ==== */
+$radius: 12px;
+$transition: 150ms ease;
+
+/* ==== Global sahifa dizayni ==== */
+.admin-page {
+  padding: 24px;
+  background: $bg;
+  color: $text;
+  min-height: 100vh;
+
+  h1 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+
+  .section {
+    margin-bottom: 32px;
+  }
+
+  .card {
+    background: $card-bg;
+    border: 1px solid $border;
+    border-radius: $radius;
+    padding: 20px;
+    box-shadow: $shadow;
+    transition: box-shadow $transition;
+
+    &:hover {
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    &__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+
+      h2 {
+        font-size: 18px;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .grid {
+    display: grid;
+    gap: 16px;
+
+    &--2 {
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+
+    &--3 {
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+  }
+
+  .button {
+    display: inline-block;
+    background: $primary;
+    color: white;
+    padding: 8px 14px;
+    font-size: 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background $transition;
+
+    &:hover {
+      background: darken($primary, 6%);
+    }
+
+    &--danger {
+      background: $danger;
+
+      &:hover {
+        background: darken($danger, 6%);
+      }
+    }
+
+    &--ghost {
+      background: transparent;
+      color: $text-light;
+      border: 1px solid $border;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.03);
+      }
+    }
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 12px;
+
+    label {
+      font-size: 14px;
+      color: $text-light;
+    }
+
+    input, select {
+      border: 1px solid $border;
+      padding: 8px 12px;
+      font-size: 14px;
+      border-radius: 8px;
+      background: white;
+    }
+  }
+
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid $border;
+    }
+
+    th {
+      background: #f3f4f6;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    td {
+      font-size: 14px;
+    }
+
+    tbody tr:hover {
+      background: #f9fafb;
+    }
+  }
+}

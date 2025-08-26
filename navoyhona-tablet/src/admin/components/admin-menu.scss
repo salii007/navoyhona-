@@ -1,0 +1,177 @@
+/* ================================
+   Admin Menu (Dropdown) Styles
+   File: src/admin/components/admin-menu.scss
+   ================================ */
+
+/* --- Design tokens (o'zgartirish mumkin) --- */
+$menu-bg: #ffffff;
+$menu-fg: #1f2937; // text-gray-800
+$menu-danger: #dc2626; // red-600
+$ring: rgba(0, 0, 0, 0.06);
+$shadow: 0 10px 25px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
+$radius: 14px;
+$transition: 150ms ease;
+
+/* --- Dark mode qo'llab-quvvatlash (agar .dark rootda bo'lsa) --- */
+:root.dark {
+  --menu-bg: #0b0f1a;
+  --menu-card: #0f172a; /* slate-900/800 oralig'i */
+  --menu-fg: #e5e7eb;   /* gray-200 */
+  --menu-border: #1f2937;
+}
+:root {
+  --menu-bg: #f8fafc;   /* slate-50 */
+  --menu-card: #ffffff;
+  --menu-fg: #111827;   /* gray-900 */
+  --menu-border: #e5e7eb;
+}
+
+/* --- Animations --- */
+@keyframes menu-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(4px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* --- Root wrapper --- */
+.admin-menu {
+  position: relative;
+  display: inline-block;
+  z-index: 50;
+
+  /* Button */
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px; height: 40px;
+    border-radius: 9999px;
+    background: transparent;
+    color: $menu-fg;
+    border: 1px solid transparent;
+    transition: background-color $transition, box-shadow $transition, transform $transition;
+    outline: none;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(0,0,0,0.06);
+    }
+
+    &:focus-visible {
+      box-shadow: 0 0 0 2px white, 0 0 0 4px $ring;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    /* Icon */
+    svg {
+      width: 22px; height: 22px;
+      display: block;
+    }
+  }
+
+  /* Dropdown panel */
+  &__panel {
+    position: absolute;
+    left: 0;
+    margin-top: 8px;
+    width: 224px; /* w-56 */
+    background: var(--menu-card, $menu-bg);
+    color: var(--menu-fg, $menu-fg);
+    border: 1px solid var(--menu-border, #e5e7eb);
+    border-radius: $radius;
+    box-shadow: $shadow;
+    padding: 6px;
+    animation: menu-pop 160ms cubic-bezier(.2,.6,.3,1) both;
+    backdrop-filter: saturate(140%) blur(6px);
+  }
+
+  /* Menu group (vertical stack) */
+  &__group {
+    display: grid;
+    gap: 2px;
+    padding: 4px 0;
+  }
+
+  /* Menu item (button) */
+  &__item {
+    width: 100%;
+    text-align: left;
+    font-size: 14px;
+    line-height: 1.2;
+    color: inherit;
+    border: 0;
+    background: transparent;
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color $transition, color $transition;
+
+    .emoji {
+      width: 18px; height: 18px;
+      display: inline-flex; align-items: center; justify-content: center;
+      opacity: 0.95; 
+    }
+
+    &:hover {
+      background: rgba(15, 23, 42, 0.06); /* slate-900/6% */
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 2px white, 0 0 0 4px $ring;
+    }
+
+    &--danger {
+      color: $menu-danger;
+
+      &:hover {
+        background: rgba(220, 38, 38, 0.08);
+      }
+    }
+  }
+
+  /* Divider */
+  &__divider {
+    height: 1px;
+    width: 100%;
+    background: var(--menu-border, #e5e7eb);
+    margin: 6px 0;
+    opacity: 0.7;
+  }
+
+  /* Reduce motion accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    &__panel {
+      animation: none;
+    }
+    &__btn {
+      transition: none;
+    }
+    &__item {
+      transition: none;
+    }
+  }
+}
+
+/* --- Touch optimizatsiya (kichik ekranlar) --- */
+@media (max-width: 480px) {
+  .admin-menu__panel {
+    width: 260px;
+  }
+  .admin-menu__item {
+    font-size: 15px;
+    padding: 12px 14px;
+  }
+}

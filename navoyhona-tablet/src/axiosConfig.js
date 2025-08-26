@@ -9,7 +9,7 @@ instance.interceptors.request.use((config) => {
   let token = null;
 
   if (pathname.startsWith('/admin')) {
-    token = localStorage.getItem('admintoken');
+    token = localStorage.getItem('adminToken');
   } else if (pathname.startsWith('/courier')) {
     token = localStorage.getItem('courierToken');
   } else {

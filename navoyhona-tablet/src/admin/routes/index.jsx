@@ -8,6 +8,7 @@ import SozlamalarPage from '../pages/SozlamalarPage';
 import AdminLogin from '../pages/Login';
 import AdminPrivateRoute from '../components/AdminPrivateRoute';
 
+
 export const adminRoutes = (
   <Route path="/admin">
     <Route index element={<AdminLogin />} />
@@ -23,6 +24,7 @@ export const adminRoutes = (
       
       <Route path="statistika" element={<StatistikaPage />} />
       <Route path="sozlamalar" element={<SozlamalarPage />} />
+
     </Route>
   </Route>
 );

@@ -19,8 +19,10 @@ import adminReturnsRoutes from './routes/adminReturns.js';
 import courierLocationRoutes from './routes/courierLocation.js';
 import courierOrderRoutes from './routes/courierOrders.js';
 import yandexSuggestRouter from './routes/yandexSuggest.js';
-
-
+import adminStats from './routes/adminStats.js';
+import adminSettings from './routes/adminSettings.js';
+import productionRouter from './routes/production.js';
+import adminStocksRouter from './routes/adminStocks.js';
 
 
 const app = express();
@@ -33,9 +35,9 @@ app.use(bodyParser.json());
 app.use('/api/proxy-suggest', suggestRouter);
 app.use('/api/scheduled-orders', scheduledOrderRoutes);
 app.use('/products', productRoutes);
-app.use('/admin', orderRoutes);
+app.use('/api/admin', orderRoutes);
 app.use('/auth', authRoutes);
-app.use('/admin', adminRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/', statsRoutes);
 app.use('/admin/reports', adminReportRoutes);
 app.use('/returns', returnsRoutes);
@@ -43,8 +45,12 @@ app.use('/admin/returns', adminReturnsRoutes);
 app.use('/couriers', courierLocationRoutes);
 app.use('/courier/orders', courierOrderRoutes);
 app.use('/yandex-suggest', yandexSuggestRouter);
+app.use('/api/admin/stats', adminStats);
+app.use('/api/admin', adminSettings);
+app.use('/production', productionRouter); 
+app.use('/api/admin', adminStocksRouter);
 
-
+app.get('/api/health', (req,res)=>res.json({ok:true}));
 
 // 🚀 Serverni ishga tushurish
 const PORT = process.env.PORT || 3000;

@@ -4,41 +4,32 @@ import { Link } from 'react-router-dom';
 import LogoutButton from './LogoutButton.jsx';
 import BellNotification from './Bell.jsx';
 import Clock from '../../common/ui/Clock.jsx';
+import ProducedBadge from './ProducedBadge.jsx';
+import { getUserFromTokenSafe } from '../../common/auth/getUser.js';
 
-// 👤 Tokenni ichidan foydalanuvchini olish
-function getUserFromToken() {
-  const token = localStorage.getItem('token');
-  if (!token) return null;
-
-  try {
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload; // { name, role }
-  } catch {
-    return null;
-  }
-}
 
 function Navbar() {
-  const user = getUserFromToken();
+  const user = getUserFromTokenSafe();
 
   return (
     <div className="navbar">
       {/* Chap taraf: logotip va vaqt */}
-      <div className="navbar-left">
+      <div className="navbar-left flex items-center gap-4">
         <span>📋 Navoyhona Zakazlar</span>
         <Clock />
+        {/* 🍞 Ishlab chiqarilgan nonlar — location_id bo‘yicha */}
+        <ProducedBadge />
       </div>
 
       {/* O‘ng taraf: foydalanuvchi va tugmalar */}
       <div className="flex items-center gap-6">
-        {/* 👤 Foydalanuvchi ma’lumoti */}
         {user && (
           <div className="text-sm text-gray-600">
             👤 {user.name} ({user.role})
           </div>
         )}
 
-        <div className="navbar-right">
+        <div className="navbar-right flex gap-3">
           <BellNotification />
 
           <Link to="/zakazlar" className="nav-link link-zakazlar">📦 Zakazlar</Link>

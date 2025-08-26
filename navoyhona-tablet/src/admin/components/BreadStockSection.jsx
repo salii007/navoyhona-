@@ -1,22 +1,31 @@
 // src/admin/components/BreadStockSection.jsx
 import { useEffect, useState } from 'react';
-import axios from '../../axiosConfig';
+import axios from '../../axiosConfig.js';
 
 export default function BreadStockSection() {
   const [stocks, setStocks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState('');
 
   useEffect(() => {
     const fetchStocks = async () => {
       try {
-        const res = await axios.get('/admin/stocks');
-        setStocks(res.data);
-      } catch (err) {
-        console.error('Non zaxirasi olinmadi', err);
+        setErr('');
+        setLoading(true);
+        // baseURL: '/api' → yakuniy URL: /api/admin/stocks
+        const res = await axios.get('admin/stocks');
+        setStocks(res.data || []);
+      } catch (e) {
+        setErr(e?.response?.data?.error || e?.message || 'Ma’lumot olinmadi');
+      } finally {
+        setLoading(false);
       }
     };
-
     fetchStocks();
   }, []);
+
+  if (loading) return <div>Yuklanmoqda…</div>;
+  if (err) return <div className="text-red-600">Xatolik: {err}</div>;
 
   return (
     <div className="space-y-2">
