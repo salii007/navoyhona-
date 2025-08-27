@@ -54,7 +54,7 @@ export default function CourierMap() {
     // 📦 Kuryer joylashuvlarini yuklash
     const fetchCouriers = async () => {
       try {
-        const res = await axios.get('couriers/locations');
+        const res = await axios.get('/couriers/locations');
         setCouriers(res.data);
       } catch (err) {
         console.error('❌ Kuryer joylashuvini olishda xatolik:', err);

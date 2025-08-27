@@ -44,7 +44,7 @@ export default function CommonLogin() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('auth/login', { phone, password });
+      const response = await axios.post('/auth/login', { phone, password });
       const token = response.data.token;
       const role = getRoleFromToken(token);
 

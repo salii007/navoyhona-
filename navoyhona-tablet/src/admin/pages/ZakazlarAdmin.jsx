@@ -17,7 +17,7 @@ export default function ZakazlarAdmin() {
 
     const fetchZakazlar = async () => {
       try {
-        const res = await axios.get('admin/orders');
+        const res = await axios.get('/admin/orders');
         setOrders(res.data);
       } catch (err) {
         console.error('❌ Zakazlar olinmadi:', err);

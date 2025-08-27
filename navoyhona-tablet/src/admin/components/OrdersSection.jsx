@@ -32,7 +32,7 @@ export default function OrdersSection() {
 
     const fetchOrders = async () => {
       try {
-        const res = await axios.get('admin/orders');
+        const res = await axios.get('/admin/orders');
 
         // ✅ path bo‘yicha tanlab ko‘rsatamiz
         const allOrders = res.data;

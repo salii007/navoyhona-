@@ -70,8 +70,8 @@ export default function CreateZakazAdmin() {
       try {
         // Bazaviy faraz: axiosConfig da baseURL = '/api'
         const [prodRes, locRes] = await Promise.all([
-          axios.get('admin/products'),
-          axios.get('admin/locations'),
+          axios.get('/admin/products'),
+          axios.get('/admin/locations'),
         ]);
         setProducts(Array.isArray(prodRes.data) ? prodRes.data : []);
         setLocations(Array.isArray(locRes.data) ? locRes.data : []);
@@ -93,7 +93,7 @@ export default function CreateZakazAdmin() {
       try {
         // Agar sizda kuryer ro‘yxatini lokatsiya bo‘yicha beradigan endpoint bo‘lsa:
         // Masalan: GET /api/admin/couriers?location_id=...
-        const res = await axios.get('admin/couriers', {
+        const res = await axios.get('/admin/couriers', {
           params: { location_id: selectedLocationId }
         });
         setCouriers(Array.isArray(res.data) ? res.data : []);
@@ -151,7 +151,7 @@ export default function CreateZakazAdmin() {
 
     try {
       // Admin sifatida yaratamiz: /api/admin/scheduled-orders
-      await axios.post('admin/scheduled-orders', {
+      await axios.post('/admin/scheduled-orders', {
         name,
         phone,
         address,

@@ -12,7 +12,7 @@ export default function Bell() {
     try {
       setError(null);
       // ⬅️ baseURL '/api' bo‘lgani uchun bu yerda '/scheduled-orders/today'
-      const res = await axios.get('scheduled-orders/today');
+      const res = await axios.get('/scheduled-orders/today');
       setOrders(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error('Bell fetch error:', err);

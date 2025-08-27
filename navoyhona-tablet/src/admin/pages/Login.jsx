@@ -3,87 +3,92 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from '../../axiosConfig';
 
-// 🔓 Token ichidan rolni ajratib olish
+// JWT ichidan role ajratish (faqat tekshiruv uchun)
 function getRoleFromToken(token) {
   try {
     const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload.role;
+    return payload.role || null;
   } catch {
     return null;
   }
 }
 
 export default function AdminLogin() {
+  const navigate = useNavigate();
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState('');
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-  
+    setErr('');
+    setLoading(true);
     try {
-      const res = await axios.post('/auth/login', { phone, password });
-      const token = res.data.token;
-  
+      // Backend: POST /api/admin/login (yoki /api/auth/login) — senga mos endpoint
+      const { data } = await axios.post('/admin/login', { phone, password });
+
+      // Kutilayotgan javob: { token: '...' }
+      const token = data?.token;
+      if (!token) {
+        setErr('Token topilmadi');
+        setLoading(false);
+        return;
+      }
+
+      // Tokenni admin kalitida saqlaymiz
+      localStorage.setItem('adminToken', token);
+
+      // Roli adminmi? (ixtiyoriy tekshiruv)
       const role = getRoleFromToken(token);
       if (role !== 'admin') {
-        return setError('⛔ Bu sahifaga faqat admin kira oladi!');
-      }else{
-        localStorage.setItem('admintoken', token);
-        localStorage.setItem('role', role);
-    
-        // ✅ To‘g‘ri sahifaga redirect qilamiz
-        navigate('/admin/dashboard', { replace: true });
+        setErr('Admin emas (role mismatch)');
+        setLoading(false);
+        return;
       }
-  
 
-    } catch (err) {
-      setError('❌ Login xatosi: telefon yoki parol noto‘g‘ri');
+      // Admin panelga yuboramiz (Dashboard ochiladi)
+      navigate('/admin', { replace: true });
+    } catch (e) {
+      setErr(e?.response?.data?.error || 'Login xato');
+    } finally {
+      setLoading(false);
     }
   };
-  
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <form
-        onSubmit={handleLogin}
-        className="bg-white p-6 rounded shadow w-80 space-y-4"
-      >
-        <h2 className="text-2xl font-bold text-center text-blue-600">
-          🛠 Admin Panelga Kirish
-        </h2>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+      <form onSubmit={handleSubmit} className="w-full max-w-sm bg-white rounded-2xl shadow p-6 space-y-4">
+        <h1 className="text-xl font-bold">Admin Login</h1>
 
-        {error && (
-          <div className="text-red-600 text-sm text-center font-semibold">
-            {error}
-          </div>
-        )}
+        {err && <div className="text-red-600 text-sm">{err}</div>}
 
-        <input
-          type="text"
-          placeholder="📞 Telefon raqam"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          className="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
-          required
-        />
+        <div>
+          <label className="text-sm">Telefon</label>
+          <input
+            className="mt-1 w-full border rounded-lg px-3 py-2"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="+99890..."
+          />
+        </div>
 
-        <input
-          type="password"
-          placeholder="🔑 Parol"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
-          required
-        />
+        <div>
+          <label className="text-sm">Parol</label>
+          <input
+            type="password"
+            className="mt-1 w-full border rounded-lg px-3 py-2"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••"
+          />
+        </div>
 
         <button
-          type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          disabled={loading}
+          className="w-full rounded-xl px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
         >
-          Kirish
+          {loading ? 'Kutilmoqda...' : 'Kirish'}
         </button>
       </form>
     </div>
