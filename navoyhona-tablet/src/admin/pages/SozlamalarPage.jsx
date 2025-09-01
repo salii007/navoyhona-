@@ -26,6 +26,7 @@ export default function Sozlamalar() {
   const [products, setProducts] = useState([]);
   const [pName, setPName] = useState('');
   const [pPrice, setPPrice] = useState('');
+  const [pDesc, setPDesc] = useState('');
 
   // Locations
   const [locations, setLocations] = useState([]);
@@ -65,7 +66,6 @@ export default function Sozlamalar() {
   const fetchByRole = async (role) => {
     const res = await axios.get('/api/admin/users', { params: { role } });
     return Array.isArray(res.data) ? res.data : [];
-    // 401 bo‘lsa interceptor yo‘naltiradi yoki errText qo‘yiladi
   };
 
   const fetchAll = async () => {
@@ -111,7 +111,6 @@ export default function Sozlamalar() {
       return;
     }
     fetchAll();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ======================
@@ -122,19 +121,26 @@ export default function Sozlamalar() {
     if (submitting) return;
 
     const name = pName.trim();
-    const priceNum = Number(pPrice);
+    const priceNum = parseFloat(pPrice);
+    const description = pDesc.trim();
 
     if (!name) return alert('Mahsulot nomini kiriting.');
-    if (!Number.isFinite(priceNum) || priceNum <= 0) {
-      return alert('Narx ijobiy son bo‘lishi kerak.');
+    if (!Number.isFinite(priceNum) || priceNum < 0) {
+      return alert('Narx noto‘g‘ri.');
     }
 
     setSubmitting(true);
     setErrText(null);
     try {
-      await axios.post('/api/admin/products', { name, price: priceNum, unit_price: priceNum });
+      await axios.post('/api/admin/products', {
+        name,
+        price: priceNum,
+        description: description || null,
+        unit_price: Math.round(priceNum) || 0,
+      });
       setPName('');
       setPPrice('');
+      setPDesc('');
       await fetchAll();
       toast('Mahsulot qo‘shildi ✅');
     } catch (e) {
@@ -401,12 +407,19 @@ export default function Sozlamalar() {
             />
             <input
               type="number"
-              placeholder="Bir dona narxi"
+              placeholder="Narx (masalan: 2500.50)"
               value={pPrice}
               onChange={(e) => setPPrice(e.target.value)}
               disabled={submitting}
               min={0}
-              step={100}
+              step="0.01"
+            />
+            <input
+              type="text"
+              placeholder="Izoh (ixtiyoriy)"
+              value={pDesc}
+              onChange={(e) => setPDesc(e.target.value)}
+              disabled={submitting}
             />
             <button type="submit" disabled={submitting}>
               + Qo‘shish
@@ -417,12 +430,17 @@ export default function Sozlamalar() {
         <div className="list">
           {products.length === 0 && <div className="empty">Mahsulotlar yo‘q</div>}
           {products.map((p) => {
-            const unit = Number(p.unit_price ?? p.price ?? 0);
+            const unit = Number(p.unit_price ?? 0);
             return (
               <div key={p.id} className="item">
                 <div className="main">
                   <div className="name">{p.name}</div>
-                  <div className="sub">{unit.toLocaleString('uz-UZ')} so‘m</div>
+                  <div className="sub">
+                    {unit.toLocaleString('uz-UZ')} so‘m
+                    {p.price ? ` • narx: ${p.price}` : ''}
+                    {p.description ? ` • ${p.description}` : ''}
+                    {p.created_at ? ` • ${new Date(p.created_at).toLocaleString()}` : ''}
+                  </div>
                 </div>
                 <div className="actions">
                   <button
@@ -539,7 +557,6 @@ export default function Sozlamalar() {
           </form>
         </div>
 
-        {/* 3 ustunli panellar: kuryer/tablet/admin va ishlab chiqarish rollari */}
         <div className="grid-roles">
           {renderUserList('Kuryerlar', couriers)}
           {renderUserList('Tablet foydalanuvchilari', tablets)}

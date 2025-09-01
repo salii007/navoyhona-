@@ -34,7 +34,7 @@ export default function ProduceModal({ open, onClose, onUpdated }) {
       return;
     }
     if (!delta || Number(delta) === 0) {
-      setErr('Qiymat 0 bo‘lishi mumkin emas.');
+      setErr('Qiymat 0.');
       return;
     }
     if (role !== 'tablet' && role !== 'admin') {
@@ -123,7 +123,7 @@ export default function ProduceModal({ open, onClose, onUpdated }) {
 
         <form onSubmit={handleSubmit} className="space-y-3">
           <div>
-            <label className="block text-sm mb-1">Δ (qo‘shish/aytirish soni):</label>
+            
             <input
               type="number"
               className="w-full border rounded px-3 py-2"
@@ -155,9 +155,6 @@ export default function ProduceModal({ open, onClose, onUpdated }) {
           </div>
         </form>
 
-        <div className="mt-3 text-xs text-gray-500">
-          Eslatma: Aytirish (minus) faqat xatoni to‘g‘rilash uchundir. Har bir amal loglanadi.
-        </div>
       </div>
     </div>
   );

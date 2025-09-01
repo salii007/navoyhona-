@@ -1,5 +1,4 @@
 // src/pages/CreateZakaz.jsx
-
 import React, { useState, useEffect } from 'react';
 import axios from '../../axiosConfig.js'; 
 import { useNavigate } from 'react-router-dom';
@@ -38,8 +37,12 @@ export default function CreateZakaz() {
     setScheduledTime(`${hh}:${mi}`);
 
     axios.get('/products')
-      .then(res => setProducts(res.data))
-      .catch(err => console.error('❌ Mahsulotlarni olishda xatolik:', err));
+    .then(res => {
+      console.log("📦 Products:", res.data);
+      setProducts(res.data);
+    })
+    .catch(err => console.error('❌ Mahsulotlarni olishda xatolik:', err));
+  
   }, []);
 
   const totalSum = unitPrice * quantity;
@@ -64,13 +67,13 @@ export default function CreateZakaz() {
     }
   
     try {
-      await axios.post('api/scheduled-orders', {
+      await axios.post('/api/scheduled-orders', {
         name,
         phone,
         address,
         product_name: productName,
         quantity,
-        unit_price: unitPrice,
+        unit_price: unitPrice,   // ✅ faqat unit_price yuboriladi
         location_id,
         date: scheduledDate,
         time: scheduledTime,
@@ -88,56 +91,123 @@ export default function CreateZakaz() {
 
   return (
     <div className="page-background">
-      
       <div className="form-container">
         <h1 className="form-title">Yangi Zakaz Qo‘shish</h1>
 
         <form onSubmit={handleSubmit} className="form-box">
-          <input type="text" placeholder="F.I.Sh" className="input-field" value={name} onChange={e => setName(e.target.value)} required />
-          <input type="text" placeholder="Telefon raqam" className="input-field" value={phone} onChange={e => setPhone(e.target.value)} required />
+          <input 
+            type="text" 
+            placeholder="F.I.Sh" 
+            className="input-field" 
+            value={name} 
+            onChange={e => setName(e.target.value)} 
+            required 
+          />
+          <input 
+            type="text" 
+            placeholder="Telefon raqam" 
+            className="input-field" 
+            value={phone} 
+            onChange={e => setPhone(e.target.value)} 
+            required 
+          />
 
           <div>
             <label className="label">Manzil</label>
             <AddressAutocomplete value={address} onChange={setAddress} />
           </div>
 
-          <select className="select-field" value={selectedProductId} onChange={e => {
-            const productId = e.target.value;
-            setSelectedProductId(productId);
-            const selected = products.find(p => p.id == productId);
-            setProductName(selected?.name || '');
-            setUnitPrice(selected?.price || 0);
-          }} required>
-            <option value="">Mahsulot tanlang</option>
-            {products.map(p => (
-              <option key={p.id} value={p.id}>{p.name} — {p.price} so‘m</option>
-            ))}
+          <select 
+              className="select-field" 
+              value={selectedProductId} 
+              onChange={e => {
+                const productId = Number(e.target.value);
+                setSelectedProductId(productId);
+                const selected = products.find(p => p.id === productId);
+                setProductName(selected?.name || '');
+                setUnitPrice(selected?.unit_price || 0);   // ✅ faqat unit_price ishlatyapmiz
+              }} 
+              required
+            >
+              <option value="">Mahsulot tanlang</option>
+              {products.map(p => (
+              <option key={p.id} value={p.id}>
+              {p.name} — {p.unit_price ? Number(p.unit_price).toLocaleString() + " so‘m" : "narx yo‘q"}
+            </option>
+            
+             
+              
+              ))}
           </select>
 
-          <input type="number" placeholder="Miqdor" className="input-field" value={quantity} onChange={e => setQuantity(+e.target.value)} min="1" required />
-          <input type="date" className="input-field" value={scheduledDate} onChange={e => setScheduledDate(e.target.value)} required />
+
+          <input 
+            type="number" 
+            placeholder="Miqdor" 
+            className="input-field" 
+            value={quantity} 
+            onChange={e => setQuantity(+e.target.value)} 
+            min="1" 
+            required 
+          />
+          <input 
+            type="date" 
+            className="input-field" 
+            value={scheduledDate} 
+            onChange={e => setScheduledDate(e.target.value)} 
+            required 
+          />
 
           <div>
             <label className="label">🕒 Yetkazish vaqti</label>
-            <TimePicker className="w-full" onChange={setScheduledTime} value={scheduledTime} clearIcon={null} clockIcon={null} format="HH:mm" required />
+            <TimePicker 
+              className="w-full" 
+              onChange={setScheduledTime} 
+              value={scheduledTime} 
+              clearIcon={null} 
+              clockIcon={null} 
+              format="HH:mm" 
+              required 
+            />
           </div>
 
           <div className="radio-group">
             <label className="radio-label">
-              <input type="radio" value="yoq" checked={zalogType === 'yoq'} onChange={e => setZalogType(e.target.value)} /> Zalog yo‘q
+              <input 
+                type="radio" 
+                value="yoq" 
+                checked={zalogType === 'yoq'} 
+                onChange={e => setZalogType(e.target.value)} 
+              /> Zalog yo‘q
             </label>
             <label className="radio-label">
-              <input type="radio" value="bor" checked={zalogType === 'bor'} onChange={e => setZalogType(e.target.value)} /> Zalog bor
+              <input 
+                type="radio" 
+                value="bor" 
+                checked={zalogType === 'bor'} 
+                onChange={e => setZalogType(e.target.value)} 
+              /> Zalog bor
             </label>
           </div>
 
           {zalogType === 'bor' && (
-            <input type="number" placeholder="Qancha zalog berildi?" className="input-field" value={zalogAmount} onChange={e => setZalogAmount(+e.target.value)} min="0" />
+            <input 
+              type="number" 
+              placeholder="Qancha zalog berildi?" 
+              className="input-field" 
+              value={zalogAmount} 
+              onChange={e => setZalogAmount(+e.target.value)} 
+              min="0" 
+            />
           )}
 
-          <p className="summary">💸 Umumiy: {unitPrice} × {quantity} = {totalSum.toLocaleString()} so‘m</p>
+          <p className="summary">
+            💸 Umumiy: {unitPrice} × {quantity} = {totalSum.toLocaleString()} so‘m
+          </p>
           {zalogType === 'bor' && (
-            <p className="summary-green">Zalog: {zalogAmount.toLocaleString()} so‘m<br />Qolgan: {remaining.toLocaleString()} so‘m</p>
+            <p className="summary-green">
+              Zalog: {zalogAmount.toLocaleString()} so‘m<br />Qolgan: {remaining.toLocaleString()} so‘m
+            </p>
           )}
 
           <button type="submit" className="submit-button">✅ Zakazni yuborish</button>

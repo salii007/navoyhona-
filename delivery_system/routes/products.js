@@ -18,14 +18,18 @@ router.post('/', auth, role('admin'), async (req, res) => {
 });
 
 // Ro‘yxat
-router.get('/', async (req, res) => {
+router.get('/', async (_req, res) => {
   try {
-    const result = await db.query('SELECT * FROM products');
+    const result = await db.query(
+      'SELECT id, name, unit_price, description FROM products ORDER BY id'
+    );
     res.json(result.rows);
   } catch (err) {
+    console.error("❌ Product list error:", err);
     res.status(500).json({ error: 'Mahsulotlarni olishda xatolik' });
   }
 });
+
 
 // Yangilash
 router.put('/:id', auth, async (req, res) => {
